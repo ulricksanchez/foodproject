@@ -9,23 +9,26 @@ export const Search = () => {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState('');
   const [nextPageUrl, setNextPageUrl] = useState('');
+  const [previousPageUrl, setPreviousPageUrl] = useState('');
   const { recipes, loading, error } = useFetch(params.queryTerm, nextPageUrl);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
 
-  // console.log(recipes._links.next.href);
-
   const handleSearch = () => {
-    // setNextPageUrl('');
+    setNextPageUrl('');
     navigate(`/search/${inputValue}`);
   };
 
   const loadNextPage = () => {
+    setPreviousPageUrl(nextPageUrl);
     setNextPageUrl(recipes._links.next.href);
-    //gawa setpreviouspage url storage
-    console.log(nextPageUrl);
+  };
+
+  const loadPreviousPage = () => {
+    setNextPageUrl(previousPageUrl);
+    setPreviousPageUrl('');
   };
 
   if (loading) {
@@ -40,6 +43,8 @@ export const Search = () => {
     <>
       <Navbar />
       <section className="mt-custom my-12 max-w-screen-xl mx-auto px-6">
+        <button onClick={loadPreviousPage}>Previous</button>
+        <button onClick={loadNextPage}>Load More</button>
         <div className="flex items-center justify-center space-x-6">
           <input
             type="text"
@@ -100,7 +105,6 @@ export const Search = () => {
           )}
         </div>
       </section>
-      <button onClick={loadNextPage}>Load More</button>
       <Footer />
     </>
   );
